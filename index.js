@@ -4,10 +4,15 @@ const cors = require('cors');
 const connectDB = async () => {
     const mongoose = require('mongoose');
     try {
-        const conn = await mongoose.connect(process.env.MONGODB_URI);
+        const uri = process.env.MONGODB_URI;
+        if (!uri) {
+            console.error('CRITICAL: MONGODB_URI is not defined in Render Environment Variables.');
+            process.exit(1);
+        }
+        const conn = await mongoose.connect(uri);
         console.log(`MongoDB Connected: ${conn.connection.host}`);
     } catch (error) {
-        console.error(`Error: ${error.message}`);
+        console.error(`Database Connection Error: ${error.message}`);
         process.exit(1);
     }
 };
